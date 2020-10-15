@@ -13,14 +13,14 @@ module.exports = {
     },
     save: async function (req, res) {
         try {
-            req.body.ingredients.forEach(async element => {
+            req.body.ingredients.forEach(async ({name, locationId}) => {
                 const ingredientFound = await ingredientModel.findOne({
-                    name: element.name
+                    name
                 });
                 if (!ingredientFound) {
                     const newIngredient = new ingredientModel({
-                        'name': element.name,
-                        'locationId': element.locationId,
+                        'name': name,
+                        'locationId': locationId,
                         'createdAt': moment().utc().local(),
                         'updatedAt': moment().utc().local(),
                     })
@@ -33,7 +33,7 @@ module.exports = {
         }
     },
     delete: function (req, res) {
-        const id = req.body.id;
+        const {id} = req.body;
         ingredientModel.deleteOne({
             _id: id
         }).then(() => {
